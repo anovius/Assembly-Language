@@ -1,0 +1,57 @@
+.MODEL SMALL
+.STACK 100H
+.386
+.DATA
+VAR DW 0
+.CODE
+MAIN PROC
+MOV AX,@DATA
+MOV DS,AX
+MOV CX,0
+INPUT:
+MOV DX,0
+MOV AH,01
+INT 21H
+CMP AL,13
+JE STORE
+MOV DL,AL
+SUB DL,30h
+PUSH DX
+INC CX
+JMP INPUT
+STORE:
+MOV BX,1
+LAB:
+POP DX
+MOV AX,DX
+MUL BX
+ADD VAR,AX
+MOV AX,BX
+MOV BX,10
+MUL BX
+MOV BX,AX
+DEC CX
+JNZ LAB
+MOV AX,VAR
+mov bx,ax
+mov cx,4
+print:
+ROL bx,4
+mov dl,bl
+and dl,0Fh
+cmp dl,09
+ja aa
+add dl,30h
+jmp ww
+aa:
+add dl,37h
+ww:
+mov ah,02
+int 21h
+dec cx
+jnz print
+MOV AX,4C00H
+MOV AL,DL
+INT 21H
+MAIN ENDP
+END MAIN
